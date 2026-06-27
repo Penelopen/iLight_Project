@@ -49,6 +49,7 @@ def hdfs_photo_cleaning():
 
 def check_idle_suppliers():
     pg_hook = PostgresHook(postgres_conn_id='greenplum_conn')
+    smtp_hook = SmtpHook(smtp_conn_id='smtp_conn')
 
     not_actual_suppliers = pg_hook.get_records("select * from marts.v_idle_suppliers;")
 
@@ -59,16 +60,15 @@ def check_idle_suppliers():
         suppliers_list_html = '✔️ Простаивающих поставщиков нет'
         print(suppliers_list_html)
 
-    hook = SmtpHook(smtp_conn_id='smtp_conn')
-    with hook.get_conn() as smtp_client: # Нужно обязательно инициализировать smtp_client в воздух
-        hook.send_email_smtp(
-            to='7029293@gmail.com',
+    with smtp_hook.get_conn() as smtp_client: # Нужно обязательно инициализировать smtp_client в воздух
+        smtp_hook.send_email_smtp(
+            to='my@gmail.com',
             subject='Простаивающие поставщики',
             html_content=f'{suppliers_list_html}'
         )
 
 defaults = {
-    'start_date': datetime(2026, 6, 3, 0, 0), # ПОСЛЕ какой даты обрабатывать данные
+    'start_date': datetime(2025, 11, 1, 0, 0),
     'owner': 'TonyB', # Устанавливает владельца таски. Общепринято 'airflow'
 ##    'trigger_rule': 'all_success, all_done, one_failed, none_failed, dummy' # Другие условия запуска
     'depends_on_past': False, # Запуск текущей задачи зависит от её предыдущего завершения

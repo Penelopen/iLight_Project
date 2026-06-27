@@ -7,7 +7,7 @@ import handler
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 
 defaults = {
-    'start_date': datetime(2026, 6, 3, 0, 0), # ПОСЛЕ какой даты обрабатывать данные
+    'start_date': datetime(2025, 7, 1, 0, 0),
     'owner': 'TonyB',
     'trigger_rule': 'all_success',
     'depends_on_past': False, # Запуск таски зависит от её предыдущего успешного завершения
